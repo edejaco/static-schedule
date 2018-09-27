@@ -10,6 +10,49 @@
 #include <arpa/inet.h>
 #include "CPU.h" 
 
+int catch_data_hazard(struct instruction WB, struct instruction ID, struct instruction MEM) //returns 1 if there is a data hazard found + the ID instruction needs to be stalled. 
+{
+  unsigned char dReg = 'A';
+  switch(WB.type) {
+        case ti_RTYPE: /* registers are translated for printing by subtracting offset  */
+          dReg = WB.dReg;
+          break;
+        case ti_ITYPE:
+          dReg = WB.dReg;
+          break;
+        case ti_LOAD:
+          dReg = WB.dReg;
+          break;
+        case ti_JRTYPE:
+          dReg = WB.dReg;
+          break;
+      }
+  if (dReg == 'A') {return 0;}
+
+  switch(ID.type) {
+        case ti_RTYPE: /* registers are translated for printing by subtracting offset  */
+          if (ID.sReg_a == dReg | ID.sReg_b == dReg) {return 1; }
+          break;
+        case ti_ITYPE:
+          if (ID.sReg_a == dReg) {return 1;}
+          break;
+        case ti_LOAD:
+          if (MEM.dReg == ID.sReg_a) {return 1;}
+          break;
+        case ti_STORE:
+          if (ID.sReg_a == dReg) {return 1; }
+          break;
+        case ti_BRANCH:
+          if (dReg == ID.sReg_a | dReg == ID.sReg_b) {return 1;} 
+          break;
+        case ti_JRTYPE:
+          if (dReg == ID.sReg_a) {return 1;}
+          break;
+      }
+
+      return 0;
+}
+
 int main(int argc, char **argv)
 {
   struct instruction *tr_entry;
@@ -58,8 +101,11 @@ int main(int argc, char **argv)
       cycle_number++;
 
       /* move instructions one stage ahead */
+      int data_hazard = catch_data_hazard(WB, ID, MEM);
       WB = MEM;
       MEM = EX;
+      //here is where we could insert the NOP to stall the pipeline. The ID cannot move to the EXE. 
+      if (data_hazard) {printf("\nData Hazard Found\n");} 
       EX = ID;
       ID = IF;
 
