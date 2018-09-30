@@ -24,9 +24,11 @@ struct instruction {
 	unsigned int Addr;			// mem. address
 };
 
+
+
 struct prefetch_queue {
-	struct instr1;		//first instruction ahead
-	struct instr2;		//second instruction ahead
+	struct instr1;		//next instruction to enter pipeline
+	struct instr2;		//second instruction to enter pipeline
 };
 
 #endif
