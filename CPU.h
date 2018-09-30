@@ -15,6 +15,18 @@ enum opcode {
 	ti_JRTYPE
 };
 
+struct instruction get_NOP()
+{
+	struct instruction No_OP; 
+	No_OP.type = ti_NOP;
+	No_OP.sReg_a = 0;			// 1st operand
+	No_OP.sReg_b = 0;			// 2nd operand
+	No_OP.dReg = 0;			// dest. operand
+	No_OP.PC = 0;			// program counter
+	No_OP.Addr = 0;			// mem. address
+	return No_OP;
+}
+
 struct instruction {
 	unsigned char type;			// see above
 	unsigned char sReg_a;			// 1st operand
