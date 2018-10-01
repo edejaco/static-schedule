@@ -1,4 +1,3 @@
-
 #ifndef TRACE_ITEM_H
 #define TRACE_ITEM_H
 
@@ -15,6 +14,8 @@ enum opcode {
 	ti_JRTYPE
 };
 
+
+
 struct instruction {
 	unsigned char type;			// see above
 	unsigned char sReg_a;			// 1st operand
@@ -24,13 +25,24 @@ struct instruction {
 	unsigned int Addr;			// mem. address
 };
 
-
-
+struct instruction get_NOP()
+{
+	struct instruction No_OP; 
+	No_OP.type = ti_NOP;
+	No_OP.sReg_a = 0;			// 1st operand
+	No_OP.sReg_b = 0;			// 2nd operand
+	No_OP.dReg = 0;			// dest. operand
+	No_OP.PC = 0;			// program counter
+	No_OP.Addr = 0;			// mem. address
+	return No_OP;
+}
 struct prefetch_queue {
-	struct instr1;		//next instruction to enter pipeline
-	struct instr2;		//second instruction to enter pipeline
+	struct instruction instr1;		//first instruction ahead
+	struct instruction instr2;		//second instruction ahead
 };
 
+
+char branch_hash_table[64];
 #endif
 
 #define TRACE_BUFSIZE 1024*1024
@@ -115,4 +127,3 @@ int write_trace(struct instruction item, char *fname)
 		
 	return 1;
 }
-
