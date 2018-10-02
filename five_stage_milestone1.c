@@ -81,7 +81,7 @@ int branch_prediction_correctness(struct instruction IF, struct instruction ID){
   //I didn't have enough time to look at what exactly the target field is composed of in
   //the struct though
   if (ID.type != ti_BRANCH) {return 0;}
-  if(IF.PC != ID.Addr) return 1;
+  if(IF.PC = ID.Addr) return 1;
   else return 0;
 }
 
