@@ -42,7 +42,6 @@ struct prefetch_queue {
 };
 
 
-char branch_hash_table[64];
 #endif
 
 #define TRACE_BUFSIZE 1024*1024
